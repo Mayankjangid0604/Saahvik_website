@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles, ChevronDown } from "lucide-react";
-import { SaahvikMark } from "../SaahvikLogo";
+import { SaahvikLockup } from "../SaahvikLogo";
 import { Aurora, FloatingDecor } from "../ui/Aurora";
 import { useModal } from "../ModalProvider";
 
@@ -33,37 +33,19 @@ export function Hero() {
         Now onboarding founding hostels · Early Access 2026
       </motion.div>
 
-      {/* logo mark */}
+      {/* official brand lockup — theme-swapped between cream & navy editions */}
+      <h1 className="sr-only">SAAHVIK — Smarter Hostel Management.</h1>
       <motion.div
-        initial={{ opacity: 0, scale: 0.7, rotate: -6 }}
-        animate={{ opacity: 1, scale: 1, rotate: 0 }}
-        transition={{ duration: 0.9, ease, delay: 0.05 }}
-        className="mb-8"
+        initial={{ opacity: 0, scale: 0.92, y: 18 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.9, ease, delay: 0.08 }}
+        className="w-full max-w-[600px]"
       >
-        <SaahvikMark size={88} />
+        <div className="relative overflow-hidden rounded-[1.85rem] shadow-lift ring-1 ring-gold-400/25">
+          <SaahvikLockup />
+          <span className="pointer-events-none absolute inset-0 rounded-[1.85rem] ring-1 ring-inset ring-white/5" />
+        </div>
       </motion.div>
-
-      {/* wordmark */}
-      <motion.h1
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease, delay: 0.25 }}
-        className="font-display text-6xl font-semibold tracking-[0.12em] text-content sm:text-7xl md:text-8xl"
-      >
-        SAAHVIK
-      </motion.h1>
-
-      {/* tagline */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease, delay: 0.38 }}
-        className="mt-4 font-display text-2xl font-medium italic sm:text-3xl md:text-4xl"
-      >
-        <span className="text-shimmer animate-shimmer">
-          Smarter Hostel Management.
-        </span>
-      </motion.p>
 
       {/* description */}
       <motion.p

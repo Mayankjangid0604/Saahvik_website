@@ -1,41 +1,38 @@
 import { cn } from "@/lib/utils";
 
-/** The SAAHVIK "S" monogram mark — champagne gold on deep navy. */
+/**
+ * The official SAAHVIK "S" monogram mark (champagne gold on deep navy),
+ * rendered from the brand artwork. Transparent rounded corners let it sit on
+ * any background / theme.
+ */
 export function SaahvikMark({
   size = 40,
   className,
-  shimmer = true,
+  alt = "",
+  priority = false,
 }: {
   size?: number;
   className?: string;
-  shimmer?: boolean;
+  alt?: string;
+  priority?: boolean;
 }) {
   return (
-    <span
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/brand/mark.webp"
+      alt={alt}
+      aria-hidden={alt === "" ? true : undefined}
+      width={size}
+      height={size}
       style={{ width: size, height: size }}
-      className={cn(
-        "relative inline-grid shrink-0 place-items-center rounded-[28%]",
-        "bg-gradient-to-br from-navy-700 to-navy-950 ring-1 ring-gold-400/40",
-        "shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_8px_24px_-10px_rgba(10,26,47,0.6)]",
-        className
-      )}
-      aria-hidden="true"
-    >
-      <span
-        className={cn(
-          "font-display font-semibold leading-none",
-          shimmer ? "text-shimmer animate-shimmer" : "text-gold-300"
-        )}
-        style={{ fontSize: size * 0.56 }}
-      >
-        S
-      </span>
-      <span className="pointer-events-none absolute inset-0 rounded-[28%] ring-1 ring-inset ring-white/5" />
-    </span>
+      draggable={false}
+      loading={priority ? "eager" : "lazy"}
+      className={cn("inline-block shrink-0 select-none", className)}
+    />
   );
 }
 
-/** Full lockup: mark + wordmark. */
+/** Compact lockup: official mark + wordmark (live type for crisp UI chrome). */
 export function SaahvikLogo({
   size = 36,
   className,
@@ -47,7 +44,7 @@ export function SaahvikLogo({
 }) {
   return (
     <span className={cn("inline-flex items-center gap-3", className)}>
-      <SaahvikMark size={size} />
+      <SaahvikMark size={size} priority />
       <span className="flex flex-col leading-none">
         <span
           className="font-display font-semibold tracking-[0.18em] text-content"
@@ -61,6 +58,32 @@ export function SaahvikLogo({
           </span>
         )}
       </span>
+    </span>
+  );
+}
+
+/**
+ * Full brand lockup artwork (mark + wordmark + tagline), theme-swapped between
+ * the cream and navy editions. Used as the hero centerpiece.
+ */
+export function SaahvikLockup({ className }: { className?: string }) {
+  return (
+    <span className={cn("relative block", className)}>
+      {/* eslint-disable @next/next/no-img-element */}
+      <img
+        src="/brand/lockup-light.webp"
+        alt="SAAHVIK — Smarter Hostel Management"
+        draggable={false}
+        className="block w-full dark:hidden"
+      />
+      <img
+        src="/brand/lockup-dark.webp"
+        alt=""
+        aria-hidden
+        draggable={false}
+        className="hidden w-full dark:block"
+      />
+      {/* eslint-enable @next/next/no-img-element */}
     </span>
   );
 }
