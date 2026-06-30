@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { X, Check } from "lucide-react";
 import { TRADITIONAL, SAAHVIK_WAY } from "@/lib/data";
-import { SaahvikMark } from "../SaahvikLogo";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal } from "../ui/Reveal";
 
@@ -47,8 +46,7 @@ export function WhyChoose() {
         <Reveal delay={0.12}>
           <div className="relative h-full overflow-hidden rounded-4xl border border-gold-400/40 bg-surface/70 p-8 shadow-glow backdrop-blur-xl">
             <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full bg-gold-400/15 blur-3xl" />
-            <div className="relative flex items-center gap-3">
-              <SaahvikMark size={34} />
+            <div className="relative">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold-700 dark:text-gold-200">
                 The SAAHVIK Way
               </p>

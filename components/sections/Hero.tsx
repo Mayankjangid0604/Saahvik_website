@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles, ChevronDown } from "lucide-react";
-import { SaahvikLockup } from "../SaahvikLogo";
+import { SaahvikWordmark } from "../SaahvikLogo";
 import { Aurora, FloatingDecor } from "../ui/Aurora";
 import { useModal } from "../ModalProvider";
 
@@ -39,10 +39,10 @@ export function Hero() {
         initial={{ opacity: 0, scale: 0.92, y: 18 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.9, ease, delay: 0.08 }}
-        className="w-full max-w-[600px]"
+        className="w-full max-w-[460px]"
       >
         <div className="relative overflow-hidden rounded-[1.85rem] shadow-lift ring-1 ring-gold-400/25">
-          <SaahvikLockup />
+          <SaahvikWordmark />
           <span className="pointer-events-none absolute inset-0 rounded-[1.85rem] ring-1 ring-inset ring-white/5" />
         </div>
       </motion.div>

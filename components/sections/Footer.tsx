@@ -20,7 +20,7 @@ export function Footer() {
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr]">
           {/* brand */}
           <div>
-            <SaahvikLogo size={36} withTagline />
+            <SaahvikLogo size={24} withTagline />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-muted">
               A next-generation hostel management platform — built with hostel
               owners to simplify operations, automate the everyday, and bring

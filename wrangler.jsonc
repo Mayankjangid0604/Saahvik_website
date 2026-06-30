@@ -1,0 +1,12 @@
+{
+  // Deploy the static export (`out/`) as Cloudflare Workers static assets.
+  // Having this file present makes `wrangler deploy` skip the Next.js/OpenNext
+  // auto-config that fails on the current Next.js version.
+  "name": "saahvikwebsite",
+  "compatibility_date": "2026-06-30",
+  "assets": {
+    "directory": "./out",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

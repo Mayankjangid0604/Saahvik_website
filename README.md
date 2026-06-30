@@ -51,7 +51,7 @@ app/
   layout.tsx          # fonts, metadata, theme boot script, providers
   page.tsx            # section composition
   globals.css         # theme tokens + premium utilities
-  icon.svg            # favicon (the "S" monogram)
+  icon.png            # favicon (the brand fleur-de-lis ornament)
 components/
   Providers.tsx       # Theme + Modal context providers
   ThemeProvider.tsx   # dark/light state, persisted
@@ -78,6 +78,18 @@ UI and a future backend:
 Today these resolve locally and persist to `localStorage` so nothing is lost.
 Swap the function bodies for real `fetch()` calls (markers are in the file) and
 no component has to change.
+
+## ☁️ Deployment (Cloudflare)
+
+The site is a **static export** (`output: "export"` → `out/`) deployed as
+**Cloudflare Workers static assets**. The committed `wrangler.jsonc` points at
+`./out`, so `npx wrangler deploy` uploads the static files directly — no
+OpenNext/SSR adapter, and therefore no Next.js runtime-version constraints.
+
+```bash
+npm run build        # produces ./out
+npx wrangler deploy  # uploads ./out as static assets
+```
 
 ---
 

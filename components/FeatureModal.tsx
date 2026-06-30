@@ -18,7 +18,6 @@ import {
   PartyPopper,
 } from "lucide-react";
 import { useModal } from "./ModalProvider";
-import { SaahvikMark } from "./SaahvikLogo";
 import { cn } from "@/lib/utils";
 import {
   ROLES,
@@ -312,9 +311,8 @@ export default function FeatureModal() {
             {/* ── left rail (desktop) ── */}
             <aside className="relative hidden w-64 shrink-0 flex-col gap-1 overflow-hidden bg-gradient-to-b from-navy-900 to-navy-950 p-6 md:flex">
               <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold-400/20 blur-3xl" />
-              <div className="relative mb-6 flex items-center gap-3">
-                <SaahvikMark size={36} />
-                <span className="font-display text-sm font-semibold tracking-[0.18em] text-ivory">
+              <div className="relative mb-6">
+                <span className="font-display text-lg font-semibold tracking-[0.2em] text-ivory">
                   SAAHVIK
                 </span>
               </div>
@@ -423,7 +421,7 @@ export default function FeatureModal() {
                               className="input"
                               value={data.name}
                               onChange={(e) => set("name", e.target.value)}
-                              placeholder="Your full name"
+                              placeholder=""
                             />
                           </Field>
                           <Field label="Hostel Name">
@@ -431,7 +429,7 @@ export default function FeatureModal() {
                               className="input"
                               value={data.hostelName}
                               onChange={(e) => set("hostelName", e.target.value)}
-                              placeholder="Hostel / organization"
+                              placeholder=""
                             />
                           </Field>
                           <div className="sm:col-span-2">
@@ -448,7 +446,7 @@ export default function FeatureModal() {
                               className="input"
                               value={data.city}
                               onChange={(e) => set("city", e.target.value)}
-                              placeholder="City"
+                              placeholder=""
                             />
                           </Field>
                           <Field label="Phone">
@@ -456,7 +454,7 @@ export default function FeatureModal() {
                               className="input"
                               value={data.phone}
                               onChange={(e) => set("phone", e.target.value)}
-                              placeholder="Phone number"
+                              placeholder=""
                               inputMode="tel"
                             />
                           </Field>
@@ -466,7 +464,7 @@ export default function FeatureModal() {
                                 className="input"
                                 value={data.email}
                                 onChange={(e) => set("email", e.target.value)}
-                                placeholder="you@hostel.com"
+                                placeholder=""
                                 inputMode="email"
                               />
                             </Field>
@@ -490,7 +488,7 @@ export default function FeatureModal() {
                                 className="input"
                                 value={data.students}
                                 onChange={(e) => set("students", e.target.value)}
-                                placeholder="e.g. 480"
+                                placeholder=""
                                 inputMode="numeric"
                               />
                             </Field>
@@ -499,7 +497,7 @@ export default function FeatureModal() {
                                 className="input"
                                 value={data.rooms}
                                 onChange={(e) => set("rooms", e.target.value)}
-                                placeholder="e.g. 120"
+                                placeholder=""
                                 inputMode="numeric"
                               />
                             </Field>
@@ -532,7 +530,7 @@ export default function FeatureModal() {
                             className="input min-h-[180px] resize-y leading-relaxed"
                             value={data.dreamFeatures}
                             onChange={(e) => set("dreamFeatures", e.target.value)}
-                            placeholder="Describe your dream platform — workflows, automations, anything…"
+                            placeholder=""
                           />
                         </Field>
                       )}
@@ -546,7 +544,7 @@ export default function FeatureModal() {
                             onChange={(e) =>
                               set("missingFeatures", e.target.value)
                             }
-                            placeholder="The thing no software has ever done for you…"
+                            placeholder=""
                           />
                         </Field>
                       )}

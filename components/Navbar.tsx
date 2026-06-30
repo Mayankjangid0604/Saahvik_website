@@ -46,7 +46,7 @@ export function Navbar() {
           )}
         >
           <a href="#top" className="flex items-center" aria-label="SAAHVIK home">
-            <SaahvikLogo size={32} />
+            <SaahvikLogo size={20} />
           </a>
 
           <ul className="hidden items-center gap-1 lg:flex">
@@ -107,7 +107,7 @@ export function Navbar() {
               className="absolute right-0 top-0 flex h-full w-[82%] max-w-sm flex-col gap-6 bg-surface p-6 shadow-lift"
             >
               <div className="flex items-center justify-between">
-                <SaahvikLogo size={30} />
+                <SaahvikLogo size={20} />
                 <button
                   onClick={() => setOpen(false)}
                   aria-label="Close menu"

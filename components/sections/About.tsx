@@ -11,7 +11,6 @@ import {
   BarChart3,
   Bell,
 } from "lucide-react";
-import { SaahvikMark } from "../SaahvikLogo";
 import { Reveal } from "../ui/Reveal";
 
 const ORBIT = [
@@ -36,10 +35,12 @@ function OrbitIllustration() {
       <div className="absolute h-56 w-56 rounded-full border border-line sm:h-64 sm:w-64" />
       <div className="absolute h-[19rem] w-[19rem] rounded-full border border-dashed border-line/70 sm:h-[22rem] sm:w-[22rem]" />
 
-      {/* center mark */}
-      <div className="relative z-10 grid place-items-center">
-        <span className="absolute h-24 w-24 rounded-3xl bg-gold-400/20 blur-xl" />
-        <SaahvikMark size={92} />
+      {/* center wordmark emblem */}
+      <div className="relative z-10 grid h-28 w-28 place-items-center rounded-full glass-strong">
+        <span className="absolute h-28 w-28 rounded-full bg-gold-400/15 blur-xl" />
+        <span className="relative font-display text-sm font-semibold tracking-[0.16em] text-gold-600 dark:text-gold-300">
+          SAAHVIK
+        </span>
       </div>
 
       {/* orbiting chips */}

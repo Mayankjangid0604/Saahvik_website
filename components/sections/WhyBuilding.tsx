@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown, Check } from "lucide-react";
 import { LEGACY_STACK } from "@/lib/data";
-import { SaahvikMark } from "../SaahvikLogo";
 import { SectionHeading } from "../ui/SectionHeading";
 import { Reveal, staggerParent, staggerChild } from "../ui/Reveal";
 
@@ -67,14 +66,11 @@ export function WhyBuilding() {
         <Reveal delay={0.1}>
           <div className="relative overflow-hidden rounded-4xl border border-gold-400/30 bg-surface/70 p-8 shadow-glow backdrop-blur-xl">
             <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold-400/15 blur-2xl" />
-            <div className="flex items-center gap-4">
-              <SaahvikMark size={52} />
-              <div>
-                <p className="font-display text-xl font-semibold text-content">
-                  SAAHVIK
-                </p>
-                <p className="text-sm text-muted">One intelligent platform</p>
-              </div>
+            <div>
+              <p className="font-display text-2xl font-semibold tracking-[0.1em] text-content">
+                SAAHVIK
+              </p>
+              <p className="mt-1 text-sm text-muted">One intelligent platform</p>
             </div>
             <div className="mt-6 space-y-3">
               {UNIFIED.map((u) => (
