@@ -1,18 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import {
-  AnimatePresence,
-  motion,
-  Reorder,
-  useDragControls,
-} from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   X,
   ArrowLeft,
   ArrowRight,
   Check,
-  GripVertical,
   Sparkles,
   Loader2,
   PartyPopper,
@@ -24,19 +18,14 @@ import {
   HOSTEL_TYPES,
   MGMT_METHODS,
   CHALLENGES,
-  PRIORITY_MODULES,
   DEMO_OPTIONS,
 } from "@/lib/data";
 import { submitFeatureSuggestion, type FeatureSuggestionPayload } from "@/lib/api";
 
 const STEPS = [
-  { id: 1, title: "Basic Details", hint: "Tell us about you" },
-  { id: 2, title: "Hostel Details", hint: "Your hostel at a glance" },
-  { id: 3, title: "Challenges", hint: "Where it hurts most" },
-  { id: 4, title: "Dream Features", hint: "Your perfect software" },
-  { id: 5, title: "Missing Features", hint: "What's never existed" },
-  { id: 6, title: "Priority", hint: "Rank what matters" },
-  { id: 7, title: "Demo Interest", hint: "Join the pilot" },
+  { id: 1, title: "About You", hint: "Just the essentials" },
+  { id: 2, title: "Your Hostel", hint: "A quick snapshot" },
+  { id: 3, title: "Your Ideas", hint: "The part that matters most" },
 ];
 
 type FormState = Omit<FeatureSuggestionPayload, "submittedAt">;
@@ -55,12 +44,11 @@ const EMPTY: FormState = {
   challenges: [],
   dreamFeatures: "",
   missingFeatures: "",
-  priority: PRIORITY_MODULES,
+  priority: [],
   demoInterest: "",
 };
 
-/* ── small field primitives ───────────────────────────────── */
-/** For a single native control — uses a real <label> for proper association. */
+/* ── field primitives ─────────────────────────────────────── */
 function Field({
   label,
   optional,
@@ -83,11 +71,6 @@ function Field({
   );
 }
 
-/**
- * For groups of controls (pills / checkboxes / options). A <label> must not
- * wrap multiple labelable elements, so we use role="group" + aria-label and a
- * plain text label instead — this keeps each button's own accessible name.
- */
 function Group({
   label,
   children,
@@ -120,7 +103,7 @@ function PillSelect({
           type="button"
           onClick={() => onChange(o)}
           className={cn(
-            "rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200",
+            "rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all duration-200",
             value === o
               ? "border-gold-400 bg-gold-400/15 text-gold-700 dark:text-gold-200"
               : "border-line bg-bg/40 text-muted hover:border-gold-400/50 hover:text-content"
@@ -152,53 +135,18 @@ function CheckPills({
             type="button"
             onClick={() => onToggle(o)}
             className={cn(
-              "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-200",
+              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-all duration-200",
               active
                 ? "border-gold-400 bg-gold-400/15 text-gold-700 dark:text-gold-200"
                 : "border-line bg-bg/40 text-muted hover:border-gold-400/50 hover:text-content"
             )}
           >
-            <span
-              className={cn(
-                "grid h-4 w-4 place-items-center rounded-[5px] border transition-colors",
-                active
-                  ? "border-gold-500 bg-gold-sheen text-navy-950"
-                  : "border-muted/40"
-              )}
-            >
-              {active && <Check size={11} strokeWidth={3.5} />}
-            </span>
+            {active && <Check size={13} strokeWidth={3.5} />}
             {o}
           </button>
         );
       })}
     </div>
-  );
-}
-
-function PriorityItem({ item, index }: { item: string; index: number }) {
-  const controls = useDragControls();
-  return (
-    <Reorder.Item
-      value={item}
-      dragListener={false}
-      dragControls={controls}
-      className="flex items-center gap-3 rounded-2xl border border-line bg-surface/80 p-3.5 shadow-soft backdrop-blur-sm"
-      whileDrag={{ scale: 1.02, boxShadow: "0 12px 40px -12px rgba(10,26,47,0.35)" }}
-    >
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-gold-400/15 text-sm font-bold text-gold-700 dark:text-gold-200">
-        {index + 1}
-      </span>
-      <span className="flex-1 text-[15px] font-medium text-content">{item}</span>
-      <button
-        type="button"
-        onPointerDown={(e) => controls.start(e)}
-        className="cursor-grab touch-none text-muted transition-colors hover:text-gold-500 active:cursor-grabbing"
-        aria-label={`Reorder ${item}`}
-      >
-        <GripVertical size={18} />
-      </button>
-    </Reorder.Item>
   );
 }
 
@@ -222,10 +170,8 @@ export default function FeatureModal() {
         : [...d.challenges, c],
     }));
 
-  // reset everything when fully closed
   function handleClose() {
     close();
-    // delay reset until exit animation finishes
     setTimeout(() => {
       setStep(1);
       setDir(1);
@@ -235,7 +181,6 @@ export default function FeatureModal() {
     }, 350);
   }
 
-  // body scroll lock + escape to close
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = "hidden";
@@ -249,22 +194,8 @@ export default function FeatureModal() {
   }, [isOpen]);
 
   const canContinue = useMemo(() => {
-    switch (step) {
-      case 1:
-        return (
-          data.name.trim() &&
-          data.hostelName.trim() &&
-          data.role &&
-          data.city.trim() &&
-          data.phone.trim()
-        );
-      case 2:
-        return data.hostelType && data.currentMethod;
-      case 7:
-        return data.demoInterest;
-      default:
-        return true;
-    }
+    if (step === 1) return data.name.trim() && data.phone.trim();
+    return true;
   }, [step, data]);
 
   const go = (next: number) => {
@@ -294,127 +225,69 @@ export default function FeatureModal() {
           aria-modal="true"
           aria-label={title}
         >
-          {/* backdrop */}
           <motion.div
             className="absolute inset-0 bg-navy-950/70 backdrop-blur-md"
             onClick={handleClose}
           />
 
-          {/* panel */}
           <motion.div
-            initial={{ y: 40, opacity: 0, scale: 0.98 }}
+            initial={{ y: 30, opacity: 0, scale: 0.98 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 24, opacity: 0, scale: 0.98 }}
+            exit={{ y: 20, opacity: 0, scale: 0.98 }}
             transition={{ type: "spring", damping: 30, stiffness: 280 }}
-            className="relative z-10 flex h-[100svh] w-full max-w-3xl flex-col overflow-hidden bg-surface shadow-lift sm:h-auto sm:max-h-[90vh] sm:rounded-[2rem] md:flex-row"
+            className="relative z-10 flex h-[100svh] w-full max-w-2xl flex-col overflow-hidden bg-surface shadow-lift sm:h-auto sm:max-h-[88vh] sm:rounded-[1.75rem]"
           >
-            {/* ── left rail (desktop) ── */}
-            <aside className="relative hidden w-64 shrink-0 flex-col gap-1 overflow-hidden bg-gradient-to-b from-navy-900 to-navy-950 p-6 md:flex">
-              <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold-400/20 blur-3xl" />
-              <div className="relative mb-6">
-                <span className="font-display text-lg font-semibold tracking-[0.2em] text-ivory">
-                  SAAHVIK
-                </span>
+            {/* header */}
+            <div className="flex items-center justify-between gap-4 border-b border-line px-6 py-4">
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-600 dark:text-gold-300">
+                  {success ? "All done" : `${title} · Step ${step} of 3`}
+                </p>
+                <h3 className="truncate font-display text-lg font-semibold text-content">
+                  {success ? "Thank You" : STEPS[step - 1].title}
+                </h3>
               </div>
-              <p className="relative mb-6 text-xs leading-relaxed text-ivory/60">
-                {title} — a quick guided flow. Your input shapes the roadmap.
-              </p>
-              <ol className="relative space-y-1">
-                {STEPS.map((s) => {
-                  const state =
-                    success || s.id < step
-                      ? "done"
-                      : s.id === step
-                      ? "active"
-                      : "todo";
-                  return (
-                    <li
-                      key={s.id}
-                      className={cn(
-                        "flex items-center gap-3 rounded-xl px-3 py-2 transition-colors",
-                        state === "active" && "bg-ivory/10"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "grid h-6 w-6 shrink-0 place-items-center rounded-full text-[11px] font-bold transition-colors",
-                          state === "done" &&
-                            "bg-gold-sheen text-navy-950",
-                          state === "active" &&
-                            "bg-ivory text-navy-950",
-                          state === "todo" && "bg-ivory/10 text-ivory/50"
-                        )}
-                      >
-                        {state === "done" ? <Check size={12} strokeWidth={3} /> : s.id}
-                      </span>
-                      <span
-                        className={cn(
-                          "text-sm font-medium transition-colors",
-                          state === "todo" ? "text-ivory/40" : "text-ivory"
-                        )}
-                      >
-                        {s.title}
-                      </span>
-                    </li>
-                  );
-                })}
-              </ol>
-            </aside>
+              <button
+                onClick={handleClose}
+                aria-label="Close"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-muted transition-colors hover:text-content"
+              >
+                <X size={18} />
+              </button>
+            </div>
 
-            {/* ── right content ── */}
-            <div className="flex min-h-0 flex-1 flex-col">
-              {/* header */}
-              <div className="flex items-center justify-between gap-4 border-b border-line px-6 py-4">
-                <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-gold-600 dark:text-gold-300">
-                    {success
-                      ? "All done"
-                      : `Step ${step} of ${STEPS.length}`}
-                  </p>
-                  <h3 className="truncate font-display text-lg font-semibold text-content">
-                    {success ? "Thank You" : STEPS[step - 1].title}
-                  </h3>
-                </div>
-                <button
-                  onClick={handleClose}
-                  aria-label="Close"
-                  className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-muted transition-colors hover:text-content"
-                >
-                  <X size={18} />
-                </button>
+            {/* progress */}
+            {!success && (
+              <div className="h-1 w-full bg-line">
+                <motion.div
+                  className="h-full bg-gold-sheen"
+                  initial={false}
+                  animate={{ width: `${(step / 3) * 100}%` }}
+                  transition={{ duration: 0.4 }}
+                />
               </div>
+            )}
 
-              {/* mobile progress bar */}
-              {!success && (
-                <div className="h-1 w-full bg-line md:hidden">
+            {/* body */}
+            <div className="relative flex-1 overflow-y-auto px-6 py-6">
+              {success ? (
+                <SuccessView onClose={handleClose} />
+              ) : (
+                <AnimatePresence mode="wait" custom={dir}>
                   <motion.div
-                    className="h-full bg-gold-sheen"
-                    initial={false}
-                    animate={{ width: `${(step / STEPS.length) * 100}%` }}
-                    transition={{ duration: 0.4 }}
-                  />
-                </div>
-              )}
+                    key={step}
+                    custom={dir}
+                    initial={{ opacity: 0, x: dir * 40 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: dir * -40 }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="space-y-5"
+                  >
+                    <p className="text-sm text-muted">{STEPS[step - 1].hint}</p>
 
-              {/* body */}
-              <div className="relative flex-1 overflow-y-auto px-6 py-7">
-                {success ? (
-                  <SuccessView onClose={handleClose} />
-                ) : (
-                  <AnimatePresence mode="wait" custom={dir}>
-                    <motion.div
-                      key={step}
-                      custom={dir}
-                      initial={{ opacity: 0, x: dir * 40 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: dir * -40 }}
-                      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                      className="space-y-5"
-                    >
-                      <p className="text-sm text-muted">{STEPS[step - 1].hint}</p>
-
-                      {/* STEP 1 */}
-                      {step === 1 && (
+                    {/* STEP 1 — About you */}
+                    {step === 1 && (
+                      <div className="space-y-4">
                         <div className="grid gap-4 sm:grid-cols-2">
                           <Field label="Name">
                             <input
@@ -424,32 +297,7 @@ export default function FeatureModal() {
                               placeholder=""
                             />
                           </Field>
-                          <Field label="Hostel Name">
-                            <input
-                              className="input"
-                              value={data.hostelName}
-                              onChange={(e) => set("hostelName", e.target.value)}
-                              placeholder=""
-                            />
-                          </Field>
-                          <div className="sm:col-span-2">
-                            <Group label="Role">
-                              <PillSelect
-                                options={ROLES}
-                                value={data.role}
-                                onChange={(v) => set("role", v)}
-                              />
-                            </Group>
-                          </div>
-                          <Field label="City">
-                            <input
-                              className="input"
-                              value={data.city}
-                              onChange={(e) => set("city", e.target.value)}
-                              placeholder=""
-                            />
-                          </Field>
-                          <Field label="Phone">
+                          <Field label="Phone / WhatsApp">
                             <input
                               className="input"
                               value={data.phone}
@@ -458,188 +306,122 @@ export default function FeatureModal() {
                               inputMode="tel"
                             />
                           </Field>
-                          <div className="sm:col-span-2">
-                            <Field label="Email" optional>
-                              <input
-                                className="input"
-                                value={data.email}
-                                onChange={(e) => set("email", e.target.value)}
-                                placeholder=""
-                                inputMode="email"
-                              />
-                            </Field>
-                          </div>
                         </div>
-                      )}
+                        <Field label="Hostel Name" optional>
+                          <input
+                            className="input"
+                            value={data.hostelName}
+                            onChange={(e) => set("hostelName", e.target.value)}
+                            placeholder=""
+                          />
+                        </Field>
+                        <Group label="Your role">
+                          <PillSelect
+                            options={ROLES}
+                            value={data.role}
+                            onChange={(v) => set("role", v)}
+                          />
+                        </Group>
+                      </div>
+                    )}
 
-                      {/* STEP 2 */}
-                      {step === 2 && (
-                        <div className="space-y-5">
-                          <Group label="Hostel Type">
-                            <PillSelect
-                              options={HOSTEL_TYPES}
-                              value={data.hostelType}
-                              onChange={(v) => set("hostelType", v)}
-                            />
-                          </Group>
-                          <div className="grid gap-4 sm:grid-cols-2">
-                            <Field label="Number of Students" optional>
-                              <input
-                                className="input"
-                                value={data.students}
-                                onChange={(e) => set("students", e.target.value)}
-                                placeholder=""
-                                inputMode="numeric"
-                              />
-                            </Field>
-                            <Field label="Number of Rooms" optional>
-                              <input
-                                className="input"
-                                value={data.rooms}
-                                onChange={(e) => set("rooms", e.target.value)}
-                                placeholder=""
-                                inputMode="numeric"
-                              />
-                            </Field>
-                          </div>
-                          <Group label="Current Management Method">
-                            <PillSelect
-                              options={MGMT_METHODS}
-                              value={data.currentMethod}
-                              onChange={(v) => set("currentMethod", v)}
-                            />
-                          </Group>
-                        </div>
-                      )}
-
-                      {/* STEP 3 */}
-                      {step === 3 && (
-                        <Group label="Which areas are most challenging? Select all that apply.">
+                    {/* STEP 2 — Your hostel */}
+                    {step === 2 && (
+                      <div className="space-y-5">
+                        <Group label="Type of hostel">
+                          <PillSelect
+                            options={HOSTEL_TYPES}
+                            value={data.hostelType}
+                            onChange={(v) => set("hostelType", v)}
+                          />
+                        </Group>
+                        <Group label="How do you manage it today?">
+                          <PillSelect
+                            options={MGMT_METHODS}
+                            value={data.currentMethod}
+                            onChange={(v) => set("currentMethod", v)}
+                          />
+                        </Group>
+                        <Group label="Biggest time-drains (optional, pick any)">
                           <CheckPills
                             options={CHALLENGES}
                             values={data.challenges}
                             onToggle={toggleChallenge}
                           />
                         </Group>
-                      )}
+                      </div>
+                    )}
 
-                      {/* STEP 4 */}
-                      {step === 4 && (
-                        <Field label="If you could design the perfect hostel management software, what would it include?">
+                    {/* STEP 3 — Ideas */}
+                    {step === 3 && (
+                      <div className="space-y-5">
+                        <Field label="What would make the perfect hostel software for you? What's missing today?">
                           <textarea
-                            className="input min-h-[180px] resize-y leading-relaxed"
+                            className="input min-h-[150px] resize-y leading-relaxed"
                             value={data.dreamFeatures}
-                            onChange={(e) => set("dreamFeatures", e.target.value)}
-                            placeholder=""
-                          />
-                        </Field>
-                      )}
-
-                      {/* STEP 5 */}
-                      {step === 5 && (
-                        <Field label="What feature have you always wished existed in hostel software?">
-                          <textarea
-                            className="input min-h-[180px] resize-y leading-relaxed"
-                            value={data.missingFeatures}
                             onChange={(e) =>
-                              set("missingFeatures", e.target.value)
+                              set("dreamFeatures", e.target.value)
                             }
                             placeholder=""
                           />
                         </Field>
-                      )}
-
-                      {/* STEP 6 — drag & drop ranking */}
-                      {step === 6 && (
-                        <div>
-                          <p className="label">
-                            Drag to rank modules by importance
-                          </p>
-                          <p className="mb-4 text-sm text-muted">
-                            Most important at the top.
-                          </p>
-                          <Reorder.Group
-                            axis="y"
-                            values={data.priority}
-                            onReorder={(v) => set("priority", v)}
-                            className="space-y-2.5"
-                          >
-                            {data.priority.map((item, i) => (
-                              <PriorityItem key={item} item={item} index={i} />
-                            ))}
-                          </Reorder.Group>
-                        </div>
-                      )}
-
-                      {/* STEP 7 */}
-                      {step === 7 && (
                         <Group label="Would you like to join the pilot program?">
-                          <div className="mt-1 grid gap-3 sm:grid-cols-3">
-                            {DEMO_OPTIONS.map((o) => (
-                              <button
-                                key={o}
-                                type="button"
-                                onClick={() => set("demoInterest", o)}
-                                className={cn(
-                                  "rounded-2xl border px-4 py-5 text-center text-sm font-semibold transition-all duration-200",
-                                  data.demoInterest === o
-                                    ? "border-gold-400 bg-gold-400/15 text-gold-700 shadow-soft dark:text-gold-200"
-                                    : "border-line bg-bg/40 text-muted hover:border-gold-400/50 hover:text-content"
-                                )}
-                              >
-                                {o}
-                              </button>
-                            ))}
-                          </div>
+                          <PillSelect
+                            options={DEMO_OPTIONS}
+                            value={data.demoInterest}
+                            onChange={(v) =>
+                              set("demoInterest", v as FormState["demoInterest"])
+                            }
+                          />
                         </Group>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-                )}
-              </div>
-
-              {/* footer nav */}
-              {!success && (
-                <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4">
-                  <button
-                    onClick={() => (step === 1 ? handleClose() : go(step - 1))}
-                    className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-content"
-                  >
-                    <ArrowLeft size={16} />
-                    {step === 1 ? "Cancel" : "Back"}
-                  </button>
-
-                  {step < STEPS.length ? (
-                    <button
-                      onClick={() => canContinue && go(step + 1)}
-                      disabled={!canContinue}
-                      className="btn-primary disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      Continue
-                      <ArrowRight size={16} />
-                    </button>
-                  ) : (
-                    <button
-                      onClick={handleSubmit}
-                      disabled={!canContinue || submitting}
-                      className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      {submitting ? (
-                        <>
-                          <Loader2 size={16} className="animate-spin" />
-                          Submitting…
-                        </>
-                      ) : (
-                        <>
-                          Submit
-                          <Sparkles size={16} />
-                        </>
-                      )}
-                    </button>
-                  )}
-                </div>
+                      </div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
               )}
             </div>
+
+            {/* footer nav */}
+            {!success && (
+              <div className="flex items-center justify-between gap-3 border-t border-line px-6 py-4">
+                <button
+                  onClick={() => (step === 1 ? handleClose() : go(step - 1))}
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-content"
+                >
+                  <ArrowLeft size={16} />
+                  {step === 1 ? "Cancel" : "Back"}
+                </button>
+
+                {step < 3 ? (
+                  <button
+                    onClick={() => canContinue && go(step + 1)}
+                    disabled={!canContinue}
+                    className="btn-primary disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    Continue
+                    <ArrowRight size={16} />
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleSubmit}
+                    disabled={submitting}
+                    className="btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin" />
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        Submit
+                        <Sparkles size={16} />
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
@@ -653,7 +435,7 @@ function SuccessView({ onClose }: { onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="grid min-h-[320px] place-items-center py-6 text-center"
+      className="grid min-h-[280px] place-items-center py-6 text-center"
     >
       <div className="flex flex-col items-center">
         <motion.div

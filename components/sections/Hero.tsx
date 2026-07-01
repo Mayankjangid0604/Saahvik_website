@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Play, Sparkles, ChevronDown } from "lucide-react";
 import { SaahvikWordmark } from "../SaahvikLogo";
 import { Aurora, FloatingDecor } from "../ui/Aurora";
+import { TiltCard } from "../ui/TiltCard";
 import { useModal } from "../ModalProvider";
 
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -50,7 +51,9 @@ export function Hero() {
               "radial-gradient(closest-side, rgb(var(--gold) / 0.22), transparent 70%)",
           }}
         />
-        <SaahvikWordmark />
+        <TiltCard max={10} scale={1.04}>
+          <SaahvikWordmark />
+        </TiltCard>
       </motion.div>
 
       {/* description */}

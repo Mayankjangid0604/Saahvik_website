@@ -63,37 +63,67 @@ function genId(prefix: string) {
     .slice(2, 7)}`;
 }
 
-/**
- * Submit an early-access waiting-list entry.
- *
- * TODO(backend): replace with
- *   await fetch("/api/early-access", { method: "POST", body: JSON.stringify(payload) })
- */
+/* ============================================================
+   EMAIL DELIVERY (Web3Forms)
+   ------------------------------------------------------------
+   To receive submissions in your inbox, set the build-time env
+   var NEXT_PUBLIC_WEB3FORMS_KEY to your Web3Forms access key.
+   Get a free key in 30s at https://web3forms.com (just enter
+   the email you want submissions delivered to). When the key is
+   absent (e.g. local dev), submissions still save to
+   localStorage so nothing is lost.
+   ============================================================ */
+const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY || "";
+
+function flatten(obj: Record<string, unknown>) {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    out[k] = Array.isArray(v) ? v.join(", ") : v == null ? "" : String(v);
+  }
+  return out;
+}
+
+async function sendEmail(
+  subject: string,
+  record: Record<string, unknown>
+): Promise<boolean> {
+  if (!WEB3FORMS_KEY) return false;
+  try {
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject,
+        from_name: "SAAHVIK Website",
+        ...flatten(record),
+      }),
+    });
+    const json = await res.json();
+    return Boolean(json?.success);
+  } catch {
+    return false;
+  }
+}
+
+/** Submit an early-access waiting-list entry. */
 export async function submitEarlyAccess(
   payload: EarlyAccessPayload
 ): Promise<ApiResult> {
   const record = { ...payload, submittedAt: new Date().toISOString() };
   persist("saahvik_early_access", record);
-  await new Promise((r) => setTimeout(r, FAKE_LATENCY));
+  const sent = await sendEmail("New SAAHVIK early-access signup", record);
+  if (!sent) await new Promise((r) => setTimeout(r, FAKE_LATENCY));
   return { ok: true, id: genId("ea"), message: "You're on the list." };
 }
 
-/**
- * Submit a full feature-suggestion wizard payload.
- *
- * TODO(backend): replace with
- *   await fetch("/api/feature-suggestions", { method: "POST", body: JSON.stringify(payload) })
- *
- * The payload shape is intentionally flat + serialisable so it maps
- * 1:1 to a spreadsheet row or a database record.
- */
+/** Submit a feature-suggestion payload. */
 export async function submitFeatureSuggestion(
   payload: FeatureSuggestionPayload
 ): Promise<ApiResult> {
   const record = { ...payload, submittedAt: new Date().toISOString() };
   persist("saahvik_feature_suggestions", record);
-  // eslint-disable-next-line no-console
-  console.info("[SAAHVIK] Feature suggestion captured:", record);
-  await new Promise((r) => setTimeout(r, FAKE_LATENCY));
+  const sent = await sendEmail("New SAAHVIK feature suggestion", record);
+  if (!sent) await new Promise((r) => setTimeout(r, FAKE_LATENCY));
   return { ok: true, id: genId("fs"), message: "Suggestion received." };
 }

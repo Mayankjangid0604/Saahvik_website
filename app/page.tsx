@@ -1,5 +1,6 @@
 import Loader from "@/components/Loader";
 import { Navbar } from "@/components/Navbar";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Loader />
+      <ScrollProgress />
       <Navbar />
       <main>
         <Hero />
