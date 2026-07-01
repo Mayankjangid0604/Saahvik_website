@@ -92,8 +92,8 @@ export function Footer() {
             © 2026 SAAHVIK. All Rights Reserved.
           </p>
           <p className="flex items-center gap-2 text-sm text-muted">
-            Crafted with care in
-            <span className="font-medium text-content">Jaipur, India</span>
+            Created with love by
+            <span className="font-medium text-content">SAAHVIK Group</span>
           </p>
         </div>
       </div>

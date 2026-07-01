@@ -58,44 +58,48 @@ body {
 }
 
 /* ────────────────────────────────────────────────────────────
-   Paper / Leather texture — matches the logo's engraved surface.
-   Two subtle layers: fine fibrous noise + a broader tonal wash.
-   Rendered via ::before so it never traps pointer events.
+   Page surface — the SAME material as the logo backgrounds.
+   A real leather (dark) / paper (light) swatch lifted from the
+   brand artwork, tiled seamlessly and pinned behind everything,
+   plus two soft tonal blooms. This makes the hero logo plaque
+   melt into the page — the surfaces are literally identical.
    ──────────────────────────────────────────────────────────── */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
   pointer-events: none;
+  background-color: rgb(var(--bg));
   background-image:
-    /* light warm bloom (top-left) + cool bloom (bottom-right) */
     radial-gradient(
-      1200px 700px at 8% -10%,
+      1100px 700px at 8% -8%,
+      rgb(var(--gold) / 0.08),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 700px at 106% 106%,
+      rgb(var(--content) / 0.05),
+      transparent 60%
+    ),
+    url("/brand/texture-light.webp");
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-size: cover, cover, 300px 300px;
+  background-position: center, center, center;
+}
+.dark body::before {
+  background-image:
+    radial-gradient(
+      1100px 700px at 8% -8%,
       rgb(var(--gold) / 0.06),
       transparent 60%
     ),
     radial-gradient(
-      1000px 700px at 105% 108%,
-      rgb(var(--content) / 0.05),
+      1000px 700px at 106% 106%,
+      rgb(255 255 255 / 0.03),
       transparent 60%
     ),
-    /* fibrous grain */
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-  background-size: auto, auto, 320px 320px;
-  mix-blend-mode: multiply;
-  opacity: 0.35;
-}
-.dark body::before,
-.dark::before {
-  mix-blend-mode: screen;
-  opacity: 0.12;
-}
-
-/* Content must sit above the texture. */
-body > * {
-  position: relative;
-  z-index: 1;
+    url("/brand/texture-dark.webp");
 }
 
 ::selection {

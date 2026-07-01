@@ -20,7 +20,12 @@ const CARDS = [
     href: CONTACT.whatsappLink,
     accent: true,
   },
-  { icon: Mail, label: "Email", value: CONTACT.email, soon: true },
+  {
+    icon: Mail,
+    label: "Email",
+    value: CONTACT.email,
+    href: `mailto:${CONTACT.email}`,
+  },
   {
     icon: Globe,
     label: "Website",
@@ -60,13 +65,8 @@ export function Contact() {
                 <p className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
                   {c.label}
                 </p>
-                <p className="mt-1 flex items-center gap-2 truncate text-[15px] font-semibold text-content">
+                <p className="mt-1 truncate text-[15px] font-semibold text-content">
                   {c.value}
-                  {c.soon && (
-                    <span className="rounded-full bg-content/5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted">
-                      Soon
-                    </span>
-                  )}
                 </p>
               </div>
             </>

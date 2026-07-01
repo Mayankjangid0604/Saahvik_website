@@ -182,9 +182,9 @@ export const CONTACT = {
   phone: "9530301131",
   whatsapp: "9530301131",
   whatsappLink: "https://wa.me/919530301131",
-  email: "Coming Soon",
+  email: "contact@saahvik.com",
   website: "saahvik.com",
-  location: "Jaipur, Rajasthan, India",
+  location: "Sikar, Rajasthan, India",
 };
 
 /* ============================================================
