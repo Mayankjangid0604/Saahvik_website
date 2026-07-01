@@ -10,34 +10,38 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── Fixed brand palette ──────────────────────────────
+        // ── Official SAAHVIK brand palette ──────────────────
+        //   Deep Navy      #0D1B2A  (primary bg dark)
+        //   Champagne Gold #C9A96E  (primary accent)
+        //   Cream Ivory    #F5F0E8  (primary bg light)
+        //   White          #FFFFFF  (surfaces on cream)
         navy: {
-          50: "#eef2f8",
-          100: "#d6e0ee",
-          200: "#aec1dc",
-          300: "#7e9bc4",
-          400: "#4f72a6",
-          500: "#345488",
-          600: "#213c66",
-          700: "#162c4d",
-          800: "#0f2440",
-          900: "#0a1a2f",
-          950: "#060f1d",
+          50: "#eef1f5",
+          100: "#d3dbe6",
+          200: "#a4b3c6",
+          300: "#748ba6",
+          400: "#4a668a",
+          500: "#2e4d73",
+          600: "#1c3556",
+          700: "#132741",
+          800: "#0d1b2a", // brand DEEP NAVY
+          900: "#0a1622",
+          950: "#060e18",
         },
         gold: {
           50: "#fbf7ee",
           100: "#f5ecd6",
-          200: "#ecd9ad",
-          300: "#e2c485",
-          400: "#d8b066",
-          500: "#cba35e",
-          600: "#b3894a",
-          700: "#8f6a3d",
-          800: "#735436",
-          900: "#5f462f",
+          200: "#eddcaf",
+          300: "#e2c98a",
+          400: "#d5b26e",
+          500: "#c9a96e", // brand CHAMPAGNE GOLD
+          600: "#b18f52",
+          700: "#8d7040",
+          800: "#6f5834",
+          900: "#59462b",
         },
-        ivory: "#f6f1e7",
-        cream: "#fbf8f1",
+        ivory: "#f5f0e8", // brand CREAM IVORY
+        cream: "#f5f0e8",
 
         // ── Semantic theme tokens (driven by CSS variables) ──
         bg: "rgb(var(--bg) / <alpha-value>)",

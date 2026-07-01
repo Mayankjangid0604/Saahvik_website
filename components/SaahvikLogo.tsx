@@ -30,8 +30,17 @@ export function SaahvikLogo({
 /**
  * Full brand wordmark artwork (name + flourishes + tagline), theme-swapped
  * between the cream and navy editions. Used as the hero centerpiece.
+ *
+ * A soft radial mask fades the plaque edges so the textured background of the
+ * image melts into the matching page background — no visible rectangle.
  */
 export function SaahvikWordmark({ className }: { className?: string }) {
+  const fadeMask =
+    "radial-gradient(ellipse 78% 72% at 50% 50%, #000 55%, transparent 100%)";
+  const style: React.CSSProperties = {
+    WebkitMaskImage: fadeMask,
+    maskImage: fadeMask,
+  };
   return (
     <span className={cn("relative block", className)}>
       {/* eslint-disable @next/next/no-img-element */}
@@ -39,6 +48,7 @@ export function SaahvikWordmark({ className }: { className?: string }) {
         src="/brand/wordmark-light.webp"
         alt="SAAHVIK — Smarter Hostel Management"
         draggable={false}
+        style={style}
         className="block w-full dark:hidden"
       />
       <img
@@ -46,6 +56,7 @@ export function SaahvikWordmark({ className }: { className?: string }) {
         alt=""
         aria-hidden
         draggable={false}
+        style={style}
         className="hidden w-full dark:block"
       />
       {/* eslint-enable @next/next/no-img-element */}

@@ -39,12 +39,18 @@ export function Hero() {
         initial={{ opacity: 0, scale: 0.92, y: 18 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.9, ease, delay: 0.08 }}
-        className="w-full max-w-[460px]"
+        className="relative w-full max-w-[560px]"
       >
-        <div className="relative overflow-hidden rounded-[1.85rem] shadow-lift ring-1 ring-gold-400/25">
-          <SaahvikWordmark />
-          <span className="pointer-events-none absolute inset-0 rounded-[1.85rem] ring-1 ring-inset ring-white/5" />
-        </div>
+        {/* soft gold aura so the wordmark reads on the matching page bg */}
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 -z-10 rounded-[3rem] blur-3xl"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgb(var(--gold) / 0.22), transparent 70%)",
+          }}
+        />
+        <SaahvikWordmark />
       </motion.div>
 
       {/* description */}

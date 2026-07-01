@@ -79,16 +79,30 @@ Today these resolve locally and persist to `localStorage` so nothing is lost.
 Swap the function bodies for real `fetch()` calls (markers are in the file) and
 no component has to change.
 
-## ☁️ Deployment (Cloudflare)
+## ☁️ Deployment (Cloudflare Pages)
 
-The site is a **static export** (`output: "export"` → `out/`) deployed as
-**Cloudflare Workers static assets**. The committed `wrangler.jsonc` points at
-`./out`, so `npx wrangler deploy` uploads the static files directly — no
-OpenNext/SSR adapter, and therefore no Next.js runtime-version constraints.
+The site is a **static export** (`output: "export"` → `out/`) deployed via
+**Cloudflare Pages**. This avoids `wrangler deploy`'s Next.js/OpenNext auto-
+setup wizard, which forces an SSR build and rejects our Next 14 static site.
+
+### One-time Cloudflare dashboard change
+
+Open the Cloudflare Workers/Pages dashboard for this project and set the
+**Deploy Command** to:
+
+```
+npm run deploy:ci
+```
+
+(`deploy:ci` runs `wrangler pages deploy out --project-name=saahvikwebsite`.)
+Keep the **Build Command** as `npm run build`. That's the entire fix — no
+OpenNext, no Next.js runtime-version constraints.
+
+### Local build & deploy
 
 ```bash
-npm run build        # produces ./out
-npx wrangler deploy  # uploads ./out as static assets
+npm run build   # → ./out
+npm run deploy  # build + push to Cloudflare Pages
 ```
 
 ---

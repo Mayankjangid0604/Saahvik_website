@@ -3,35 +3,38 @@
 @tailwind utilities;
 
 /* ============================================================
-   THEME TOKENS
-   Light = Cream Ivory / White.  Dark = Deep Navy.
-   Gold is the shared champagne accent across both themes.
+   THEME TOKENS — official SAAHVIK brand palette
+   -----------------------------------------------------------
+   Deep Navy      #0D1B2A   ·  primary background (dark theme)
+   Champagne Gold #C9A96E   ·  primary accent (both themes)
+   Cream Ivory    #F5F0E8   ·  primary background (light theme)
+   White          #FFFFFF   ·  surfaces on cream
    ============================================================ */
 :root,
 .light {
-  --bg: 251 248 241; /* cream */
-  --surface: 255 255 255; /* white */
-  --elevated: 246 241 231; /* ivory */
-  --content: 10 26 47; /* deep navy text */
-  --muted: 90 105 128;
-  --line: 228 220 204;
+  --bg: 245 240 232; /* #F5F0E8  Cream Ivory */
+  --surface: 255 255 255; /* #FFFFFF White */
+  --elevated: 239 232 219; /* warm cream elevation */
+  --content: 13 27 42; /* #0D1B2A Deep Navy text */
+  --muted: 90 100 118;
+  --line: 226 218 200;
 
   --gold: 179 137 74;
-  --gold-soft: 203 163 94;
-  --g-bright: #cba35e; /* deeper mid-tone so gold text stays legible on cream */
+  --gold-soft: 201 169 110; /* #C9A96E */
+  --g-bright: #b3894a;
 }
 
 .dark {
-  --bg: 6 15 29; /* navy-950 */
-  --surface: 12 28 48; /* navy-800-ish */
-  --elevated: 15 36 64; /* navy-800 */
-  --content: 244 240 230; /* warm ivory text */
-  --muted: 154 169 191;
-  --line: 28 45 70;
+  --bg: 13 27 42; /* #0D1B2A Deep Navy */
+  --surface: 20 38 58; /* raised navy */
+  --elevated: 24 46 70;
+  --content: 245 240 232; /* #F5F0E8 Cream Ivory text */
+  --muted: 158 174 196;
+  --line: 34 54 80;
 
-  --gold: 218 184 114;
+  --gold: 201 169 110; /* #C9A96E on navy */
   --gold-soft: 226 196 133;
-  --g-bright: #f0dcae; /* brighter sheen reads well on deep navy */
+  --g-bright: #e8cf95;
 }
 
 * {
@@ -51,6 +54,48 @@ body {
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
   transition: background-color 0.5s ease, color 0.5s ease;
+  position: relative;
+}
+
+/* ────────────────────────────────────────────────────────────
+   Paper / Leather texture — matches the logo's engraved surface.
+   Two subtle layers: fine fibrous noise + a broader tonal wash.
+   Rendered via ::before so it never traps pointer events.
+   ──────────────────────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    /* light warm bloom (top-left) + cool bloom (bottom-right) */
+    radial-gradient(
+      1200px 700px at 8% -10%,
+      rgb(var(--gold) / 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      1000px 700px at 105% 108%,
+      rgb(var(--content) / 0.05),
+      transparent 60%
+    ),
+    /* fibrous grain */
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0 0.05  0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: auto, auto, 320px 320px;
+  mix-blend-mode: multiply;
+  opacity: 0.35;
+}
+.dark body::before,
+.dark::before {
+  mix-blend-mode: screen;
+  opacity: 0.12;
+}
+
+/* Content must sit above the texture. */
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 ::selection {
