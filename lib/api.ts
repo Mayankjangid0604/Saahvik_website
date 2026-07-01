@@ -106,13 +106,44 @@ async function sendEmail(
   }
 }
 
+/* ============================================================
+   GOOGLE SHEETS LOGGING (Apps Script Web App)
+   ------------------------------------------------------------
+   To also log every submission as a row in a Google Sheet, set
+   NEXT_PUBLIC_GAS_ENDPOINT to your deployed Apps Script Web App
+   URL (see README for the one-time setup script + steps). Sent
+   as a no-preflight "simple request" (text/plain body) since
+   Apps Script Web Apps don't handle CORS preflight OPTIONS.
+   ============================================================ */
+const GAS_ENDPOINT = process.env.NEXT_PUBLIC_GAS_ENDPOINT || "";
+
+async function logToSheet(
+  sheetName: "Early Access" | "Feature Suggestions",
+  record: Record<string, unknown>
+): Promise<boolean> {
+  if (!GAS_ENDPOINT) return false;
+  try {
+    await fetch(GAS_ENDPOINT, {
+      method: "POST",
+      body: JSON.stringify({ sheetName, ...flatten(record) }),
+      mode: "no-cors", // Apps Script response is opaque; fire-and-forget is fine here
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Submit an early-access waiting-list entry. */
 export async function submitEarlyAccess(
   payload: EarlyAccessPayload
 ): Promise<ApiResult> {
   const record = { ...payload, submittedAt: new Date().toISOString() };
   persist("saahvik_early_access", record);
-  const sent = await sendEmail("New SAAHVIK early-access signup", record);
+  const [sent] = await Promise.all([
+    sendEmail("New SAAHVIK early-access signup", record),
+    logToSheet("Early Access", record),
+  ]);
   if (!sent) await new Promise((r) => setTimeout(r, FAKE_LATENCY));
   return { ok: true, id: genId("ea"), message: "You're on the list." };
 }
@@ -123,7 +154,10 @@ export async function submitFeatureSuggestion(
 ): Promise<ApiResult> {
   const record = { ...payload, submittedAt: new Date().toISOString() };
   persist("saahvik_feature_suggestions", record);
-  const sent = await sendEmail("New SAAHVIK feature suggestion", record);
+  const [sent] = await Promise.all([
+    sendEmail("New SAAHVIK feature suggestion", record),
+    logToSheet("Feature Suggestions", record),
+  ]);
   if (!sent) await new Promise((r) => setTimeout(r, FAKE_LATENCY));
   return { ok: true, id: genId("fs"), message: "Suggestion received." };
 }

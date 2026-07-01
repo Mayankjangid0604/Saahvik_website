@@ -75,9 +75,35 @@ UI and a future backend:
 - `submitFeatureSuggestion(payload)` — the full wizard payload (a flat,
   serialisable object that maps 1:1 to a spreadsheet row or DB record).
 
-Today these resolve locally and persist to `localStorage` so nothing is lost.
-Swap the function bodies for real `fetch()` calls (markers are in the file) and
-no component has to change.
+Every submission is always saved to `localStorage` first (nothing is ever
+lost), then — if configured — delivered two ways in parallel:
+
+### 1. Email notification (Web3Forms)
+
+1. Go to **https://web3forms.com** and enter the inbox that should receive
+   submissions (e.g. `contact@saahvik.com`) in "Create Access Key".
+2. Check that inbox, click the verification link, copy the **Access Key**.
+3. In Cloudflare → `saahvikwebsite` project → **Settings** → **Variables and
+   Secrets**, add:
+   - `NEXT_PUBLIC_WEB3FORMS_KEY` = *(your access key)*
+4. Redeploy. Every submission now emails that inbox with all fields.
+
+### 2. Google Sheet log (Apps Script — recommended if you have Workspace)
+
+1. Create a new Google Sheet (e.g. "SAAHVIK Submissions").
+2. **Extensions → Apps Script**, paste in the contents of
+   `scripts/google-apps-script.gs` (full setup notes are in that file).
+3. **Deploy → New deployment → Web app** — Execute as **Me**, access
+   **Anyone** — Deploy, authorize, copy the Web app URL
+   (`https://script.google.com/macros/s/.../exec`).
+4. In Cloudflare, add another variable:
+   - `NEXT_PUBLIC_GAS_ENDPOINT` = *(that Web app URL)*
+5. Redeploy. Every submission now also appends a row to an
+   auto-created **"Early Access"** or **"Feature Suggestions"** tab in that
+   sheet — instant spreadsheet of every response, filterable/exportable.
+
+Both are independent — enable either, both, or neither. With neither set, the
+site still works fully; submissions just stay in the visitor's browser.
 
 ## ☁️ Deployment (Cloudflare Pages)
 
