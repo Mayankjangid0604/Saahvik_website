@@ -1,9 +1,13 @@
 {
-  // Cloudflare Pages configuration.
-  // `pages_build_output_dir` is what Pages reads (Workers uses `assets`
-  // instead). With this set, `wrangler pages deploy` uploads ./out directly —
-  // no framework wizard, no OpenNext.
+  // Cloudflare Workers (Static Assets) configuration.
+  // The dashboard project "saahvikwebsite" is a Workers project (not a
+  // classic Pages project — no "Framework preset" was ever set for it), so
+  // deploys must go through `wrangler deploy`, which reads `assets` below to
+  // upload ./out as pure static assets. No Worker script, no OpenNext.
   "name": "saahvikwebsite",
   "compatibility_date": "2026-06-30",
-  "pages_build_output_dir": "./out"
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page"
+  }
 }

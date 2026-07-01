@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "next build && wrangler pages deploy out --project-name=saahvikwebsite --branch=main",
-    "deploy:ci": "wrangler pages deploy out --project-name=saahvikwebsite --branch=main"
+    "deploy": "next build && wrangler deploy",
+    "deploy:ci": "wrangler deploy"
   },
   "dependencies": {
     "framer-motion": "11.3.19",
