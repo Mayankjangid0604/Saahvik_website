@@ -1,12 +1,9 @@
 {
-  // Deploy the static export (`out/`) as Cloudflare Workers static assets.
-  // Having this file present makes `wrangler deploy` skip the Next.js/OpenNext
-  // auto-config that fails on the current Next.js version.
+  // Cloudflare Pages configuration.
+  // `pages_build_output_dir` is what Pages reads (Workers uses `assets`
+  // instead). With this set, `wrangler pages deploy` uploads ./out directly —
+  // no framework wizard, no OpenNext.
   "name": "saahvikwebsite",
   "compatibility_date": "2026-06-30",
-  "assets": {
-    "directory": "./out",
-    "html_handling": "auto-trailing-slash",
-    "not_found_handling": "404-page"
-  }
+  "pages_build_output_dir": "./out"
 }
